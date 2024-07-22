@@ -177,6 +177,7 @@ class NSGA2Reproduction:
         if len(self.parent_pop) < pop_size:
             self.assing_crowding_distance(F[i], population)
             # Sort the individuals in the current front by their crowding distance in descending order
+            F[i].sort(key=lambda x: population[x].fitness.crowding_dist, reverse=True)
             remaining_slots = pop_size - len(self.parent_pop)
             for p in F[i][:remaining_slots]:
                 self.parent_pop[p] = population[p]
@@ -225,6 +226,8 @@ class NSGA2Reproduction:
             # Sort species members by crowd distance
             members = list(sp.members.values())
             members.sort(key=lambda g: g.fitness, reverse=True)
+            for i, g in enumerate(members):
+                print(f"Genome {i} has rank {g.fitness.rank} and crowding distance {g.fitness.crowding_dist} and values {g.fitness.values}")
             # Survival threshold: how many members should be used as parents
             repro_cutoff = int(math.ceil(self.reproduction_config.survival_threshold * len(members)))
             # Use at least two parents no matter what the threshold fraction result is.

@@ -89,13 +89,10 @@ class NSGA2Population(object):
 
             valus = self.population.values()
 
-            self.best_10 = list(valus)[:10]
+            self.non_dominated = {g for g in self.population.values() if g.fitness.rank == 0}
+
+            print(self.non_dominated)
             
-            print("BEST 10")
-            for g in self.best_10:
-                print(g.fitness.values)
-                print(g.fitness.rank)
-                print(g.fitness.crowding_dist)
 
             # Gather and report statistics.
             best = None
@@ -156,4 +153,6 @@ class NSGA2Population(object):
         if self.config.no_fitness_termination:
             self.reporters.found_solution(self.config, self.generation, self.best_genome)
 
-        return self.best_genome, self.best_10
+        # Return non-dominated genomes
+
+        return self.best_genome, self.non_dominated

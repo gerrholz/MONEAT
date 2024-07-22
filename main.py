@@ -11,7 +11,7 @@ def set_seed(seed=42):
     random.seed(seed)
     #gym.seed(seed)
 
-env = gym.make("mo-halfcheetah-v4")
+env = gym.make("deep-sea-treasure-concave-v0")
 
 
 def eval_genomes(genomes, config):
@@ -19,22 +19,18 @@ def eval_genomes(genomes, config):
         genome.fitness = NSGA2Fitness(0.0, [0.0, 0.0])
 
         net = neat.nn.FeedForwardNetwork.create(genome, config)
-        observation, _ =env.reset()
+        observation, info =env.reset()
 
         done = False
         fitness = np.zeros(2)
         while not done:
             output = net.activate(observation)
-            action = np.array(np.clip(output, 0, 1))
-            next_obs, vector_reward, terminated, truncated, info = env.step(action)
+            action = np.argmax(output)
+            observation, vector_reward, terminated, truncated, info = env.step(action)
             fitness = np.add(fitness, vector_reward)
 
             if terminated or truncated:
                 break
-
-        if(fitness[0] > 50):
-            print(fitness)
-            raise RuntimeError("Fitness values are greater than 50")
 
         genome.fitness.values = fitness
         env.close()
@@ -55,7 +51,7 @@ def main():
     p.add_reporter(stats)
 
     # Run for up to 300 generations.
-    winners, best_10 = p.run(eval_genomes, 10)
+    winners, best_10 = p.run(eval_genomes, 100)
 
     # Print best 10 genomes as points in a 2d space with the objective values as coordinates using matplotlib
     x = [g.fitness.values[0] for g in best_10]
