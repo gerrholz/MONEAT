@@ -91,9 +91,6 @@ class NSGA2Population(object):
 
             self.non_dominated = {g for g in self.population.values() if g.fitness.rank == 0}
 
-            print(self.non_dominated)
-            
-
             # Gather and report statistics.
             best = None
             for g in self.population.values():
@@ -104,20 +101,12 @@ class NSGA2Population(object):
                     best = g
             self.reporters.post_evaluate(self.config, self.population, self.species, best)
 
-            print("BEST")
-            print(best.fitness.rank)
-            print(best.fitness.crowding_dist)
-            print(best.fitness.values)
-
 
             # Track the best genome ever seen.
             if self.best_genome is None or best.fitness > self.best_genome.fitness:
                 self.best_genome = best
 
-            print("BEST RANK")
-            print(best.fitness.rank)
-            print(best.fitness.crowding_dist)
-            print(best.fitness.values)
+           
 
             if not self.config.no_fitness_termination:
                 # End if the fitness threshold is reached.

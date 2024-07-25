@@ -185,8 +185,8 @@ class NSGA2Reproduction:
         # Sort population by rank and crowding distance
         new_pop = sorted(self.parent_pop.values(), key=lambda x: x.fitness, reverse=True)
 
-        for i, g in enumerate(new_pop):
-            print(f"Genome {i} has rank {g.fitness.rank} and crowding distance {g.fitness.crowding_dist} and values {g.fitness.values}")
+        #for i, g in enumerate(new_pop):
+        #    print(f"Genome {i} has rank {g.fitness.rank} and crowding distance {g.fitness.crowding_dist} and values {g.fitness.values}")
 
         pop_dict = {g.key:g for g in new_pop}
 
@@ -222,19 +222,17 @@ class NSGA2Reproduction:
         # Here the members are already sorted
         new_population = {}
         for _, sp in species.species.items():
-            print(len(sp.members))
             # Sort species members by crowd distance
             members = list(sp.members.values())
             members.sort(key=lambda g: g.fitness, reverse=True)
-            for i, g in enumerate(members):
-                print(f"Genome {i} has rank {g.fitness.rank} and crowding distance {g.fitness.crowding_dist} and values {g.fitness.values}")
+            #for i, g in enumerate(members):
+            #    print(f"Genome {i} has rank {g.fitness.rank} and crowding distance {g.fitness.crowding_dist} and values {g.fitness.values}")
             # Survival threshold: how many members should be used as parents
             repro_cutoff = int(math.ceil(self.reproduction_config.survival_threshold * len(members)))
             # Use at least two parents no matter what the threshold fraction result is.
             members = members[:max(repro_cutoff, 2)]
             # spawn the number of members on the species
             spawn = len(sp.members)
-            print(len(members))
             for i in range(spawn):
                 # pick two random parents
                 parent_a = random.choice(members)
@@ -247,6 +245,4 @@ class NSGA2Reproduction:
                 child.mutate(config.genome_config)
                 new_population[gid] = child
 
-        print("NEW POP")
-        print(len(new_population))
         return new_population
