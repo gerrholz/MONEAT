@@ -81,7 +81,6 @@ class NSGA2Reproduction:
         # Initialize the front counter
         i = 0
         while F[i]:
-            print(len(F[i]))
             Q = []
             for p in F[i]:
                 for q in S[p]:

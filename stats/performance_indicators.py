@@ -52,6 +52,9 @@ def cardinality(front: List[npt.ArrayLike]):
     front: List[npt.ArrayLike]
         A list of points to calculate the cardinality for.
     """
+    # Filter out duplicates
+    front = np.array(front)
+    front = np.unique(front, axis=0)
     return len(front)
 
 
