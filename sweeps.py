@@ -27,7 +27,7 @@ wandb.login(key=api_key)
 
 def create_neat_config(config):
     # Creates a temporary config file for NEAT and replaces the hyperparameters with the ones provided
-    with open('configs/blanks/moneat_deepsea_hyperparams.config', 'r') as file:
+    with open('configs/blanks/moneat_ant.config', 'r') as file:
         data = file.readlines()
 
     for i, line in enumerate(data):
@@ -63,7 +63,7 @@ def create_neat_config(config):
     os.remove(temp_config_file_path)
     return neat_config
 
-env = gym.make("deep-sea-treasure-mirrored-v0")
+env = gym.make("mo-ant-v4", cost_objective=False)
 
 def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
@@ -76,8 +76,8 @@ def eval_genomes(genomes, config):
         fitness = np.zeros(2)
         while not done:
             output = net.activate(observation)
-            #action = np.clip(np.array(output), -1, 1)
-            action = np.argmax(output)
+            action = np.clip(np.array(output), -1, 1)
+            #action = np.argmax(output)
             observation, vector_reward, terminated, truncated, info = env.step(action)
             fitness = np.add(fitness, vector_reward)
 

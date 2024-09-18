@@ -20,7 +20,7 @@ def set_seed(seed=42):
     random.seed(seed)
     #gym.seed(seed)
 
-env = gym.make("deep-sea-treasure-mirrored-v0")
+env = gym.make("mo-ant-v4", cost_objective=False)
 
 
 def eval_genomes(genomes, config):
@@ -34,15 +34,13 @@ def eval_genomes(genomes, config):
         fitness = np.zeros(2)
         while not done:
             output = net.activate(observation)
-            #action = np.clip(np.array(output), -1, 1)
-            action = np.argmax(output)
+            action = np.clip(np.array(output), -1, 1)
+            #action = np.argmax(output)
             observation, vector_reward, terminated, truncated, info = env.step(action)
             fitness = np.add(fitness, vector_reward)
 
             if terminated or truncated:
                 break
-
-        print(observation)
 
         genome.fitness.values = fitness
         env.close()
@@ -61,7 +59,7 @@ def close_wandb():
 # main method
 def main():
     set_seed()
-    config_path = 'moneat_deepsea_mirrored.config'
+    config_path = 'configs/moneat_ant.config'
     config = neat.config.Config(neat.DefaultGenome, NSGA2Reproduction,
                                 neat.DefaultSpeciesSet, neat.DefaultStagnation, config_path)
     # Create the population, which is the top-level object for a NEAT run.
