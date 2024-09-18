@@ -105,7 +105,7 @@ def objective(config):
 
 
 def main():
-    wandb.init(project="moneat_sweep")
+    wandb.init(project="moneat_sweep_ants")
     hypervolume = objective(wandb.config)
     wandb.log({"hypervolume": hypervolume})
 
