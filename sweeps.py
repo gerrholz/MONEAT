@@ -154,6 +154,6 @@ sweep_config = {
     }
 }
 
-sweep_id = wandb.sweep(sweep_config, project="moneat_sweep")
+sweep_id = wandb.sweep(sweep_config, project="moneat_sweep_ants")
 wandb.agent(sweep_id, function=main)
         
