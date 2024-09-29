@@ -73,7 +73,7 @@ def main():
     p.add_reporter(stats)
 
     # Run for up to 300 generations.
-    winners, non_dominant = p.run(eval_genomes, 300)
+    winners, non_dominant = p.run(eval_genomes, 1000)
 
     
 

@@ -101,7 +101,7 @@ def objective(config):
 
     winners, non_dominant = p.run(eval_genomes, config.num_generations)
 
-    return hypervolume(np.array([0, -25]), [g.fitness.values for g in non_dominant])
+    return hypervolume(np.array([-100, -100]), [g.fitness.values for g in non_dominant])
 
 
 def main():
@@ -118,7 +118,7 @@ sweep_config = {
     },
     'parameters': {
         'population_size': {
-            'values': [10, 30, 50, 80, 100, 150, 170, 200, 210, 230, 250, 270, 300]
+            'values': [10, 30, 50, 80, 100, 150, 170, 200, 210, 230, 250, 270, 300, 400, 500, 600, 700, 800, 900, 1000]
         },
         'conn_add_rate': {
             'min': 0.1,
