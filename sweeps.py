@@ -27,7 +27,7 @@ wandb.login(key=api_key)
 
 def create_neat_config(config):
     # Creates a temporary config file for NEAT and replaces the hyperparameters with the ones provided
-    with open('configs/blanks/moneat_ant.config', 'r') as file:
+    with open('configs/blanks/moneat_cheetah.config', 'r') as file:
         data = file.readlines()
 
     for i, line in enumerate(data):
@@ -63,7 +63,7 @@ def create_neat_config(config):
     os.remove(temp_config_file_path)
     return neat_config
 
-env = gym.make("mo-ant-v4", cost_objective=False)
+env = gym.make("mo-halfcheetah-v4")
 
 def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
@@ -118,7 +118,7 @@ sweep_config = {
     },
     'parameters': {
         'population_size': {
-            'values': [10, 30, 50, 80, 100, 150, 170, 200, 210, 230, 250, 270, 300, 400, 500, 600, 700, 800, 900, 1000]
+            'values': [10, 30, 50, 80, 100, 150, 170, 200, 210, 230, 250, 270, 300, 400, 500]
         },
         'conn_add_rate': {
             'min': 0.1,
@@ -137,7 +137,7 @@ sweep_config = {
             'max': 0.7,
         },
         'num_generations': {
-            'values': [10, 50, 80, 100, 130, 150, 180, 200, 230, 250, 270, 300, 330, 350, 380, 400]
+            'values': [10, 50, 80, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 900]
         },
         'survival_threshold': {
             'max': 0.5,

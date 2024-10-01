@@ -20,7 +20,7 @@ def set_seed(seed=42):
     random.seed(seed)
     #gym.seed(seed)
 
-env = gym.make("mo-ant-v4", cost_objective=False)
+env = gym.make("mo-swimmer-v4")
 
 
 def eval_genomes(genomes, config):
@@ -59,7 +59,7 @@ def close_wandb():
 # main method
 def main():
     set_seed()
-    config_path = 'configs/moneat_ant.config'
+    config_path = 'configs/moneat_swimmer.config'
     config = neat.config.Config(neat.DefaultGenome, NSGA2Reproduction,
                                 neat.DefaultSpeciesSet, neat.DefaultStagnation, config_path)
     # Create the population, which is the top-level object for a NEAT run.
