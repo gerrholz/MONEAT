@@ -27,7 +27,7 @@ wandb.login(key=api_key)
 
 def create_neat_config(config):
     # Creates a temporary config file for NEAT and replaces the hyperparameters with the ones provided
-    with open('configs/blanks/moneat_cheetah.config', 'r') as file:
+    with open('configs/blanks/moneat_swimmer.config', 'r') as file:
         data = file.readlines()
 
     for i, line in enumerate(data):
@@ -63,7 +63,7 @@ def create_neat_config(config):
     os.remove(temp_config_file_path)
     return neat_config
 
-env = gym.make("mo-halfcheetah-v4")
+env = gym.make("mo-swimmer-v4")
 
 def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
@@ -111,7 +111,7 @@ def main():
 
 
 sweep_config = {
-    'method': 'random',
+    'method': 'bayes',
     'metric': {
         'name': 'hypervolume',
         'goal': 'maximize'

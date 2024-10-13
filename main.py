@@ -81,21 +81,21 @@ def close_wandb():
 # main method
 def main(seed):
     set_seed(seed)
-    config_path = 'configs/moneat_swimmer.config'
+    config_path = 'configs/tuned/moneat_ant.config'
     config = neat.config.Config(neat.DefaultGenome, NSGA2Reproduction,
                                 neat.DefaultSpeciesSet, neat.DefaultStagnation, config_path)
     # Create the population, which is the top-level object for a NEAT run.
 
-    setup_wandb("moneat", ENV_ID, seed, config)
+    setup_wandb("moneat_evaluated_ant", ENV_ID, seed, config)
     p = NSGA2Population(config)
 
     # Add a stdout reporter to show progress in the terminal.
-    p.add_reporter(MOReporter(ref_point=np.array([-100, -100])))
+    p.add_reporter(MOReporter(ref_point=np.array([0, -50])))
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
 
     # Run for up to 300 generations.
-    winners, non_dominant = p.run(eval_genomes, 1000)
+    winners, non_dominant = p.run(eval_genomes, 600)
 
     # Print best 10 genomes as points in a 2d space with the objective values as coordinates using matplotlib
     x = [g.fitness.values[0] for g in non_dominant]

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-for seed in {100..150}
+for seed in {100..110}
 do
-    sbatch run_sbatch.sh "$seed"
+    sbatch main.sbatch "$seed"
 done
