@@ -10,7 +10,6 @@ import shutil
 def extract_number_from_filename(file_path):
     # Extract just the filename, not the full path
     filename = os.path.basename(file_path)
-    #print(filename)
     match = re.search(r'front_(\d+)_', filename)
     return int(match.group(1))
 
