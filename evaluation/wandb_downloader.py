@@ -34,6 +34,26 @@ def download_pareto_fronts(project, entity, folder_path):
             files.sort(key=extract_number_from_filename)
             latest_file_name = files[-1]
 
+            # Check if the filename already exists in the folder
+            existing_file_path = os.path.join(folder_path, latest_file_name)
+            if os.path.exists(existing_file_path):
+                # Extract the file name and extension
+                file_name, file_extension = os.path.splitext(latest_file_name)
+                counter = 1
+
+                # Construct a new name for the existing file
+                new_existing_file_name = f"{file_name}_old_{counter}{file_extension}"
+                new_existing_file_path = os.path.join(folder_path, new_existing_file_name)
+
+                # Ensure the new name is unique
+                while os.path.exists(new_existing_file_path):
+                    counter += 1
+                    new_existing_file_name = f"{file_name}_old_{counter}{file_extension}"
+                    new_existing_file_path = os.path.join(folder_path, new_existing_file_name)
+
+                # Rename the existing file
+                shutil.move(existing_file_path, new_existing_file_path)
+
             # Download the latest Pareto front file
             latest_file = run.file(latest_file_name)
             latest_file.download(replace=True, root=folder_path)
