@@ -33,7 +33,7 @@ def calculate_metrics(name, folder_path, output_path, has_known_pareto_front=Tru
             # Calculate the metrics
             hv = hypervolume(np.array([-100,-100]),pareto_front)
             s = sparsity(pareto_front)
-            sp = spacing(pareto_front)
+            #sp = spacing(pareto_front)
             cardinality = len(pareto_front)
 
             # If we have a known pareto front, calculate the generational distance and inverted generational distance
@@ -41,14 +41,14 @@ def calculate_metrics(name, folder_path, output_path, has_known_pareto_front=Tru
                 # Load front from file
                 with open("fronts/swimmer_front.json", "r") as f:
                     known_pareto_front = np.array(json.load(f)["data"])
-                    idg = inverted_generational_distance(pareto_front, known_pareto_front)
+                    idg = inverted_generational_distance(known_pareto_front, pareto_front)
             else: 
                 idg = None
             # Save the metrics
             hypervolumes.append(hv)
             cardinalities.append(cardinality)
             spacings.append(s)
-            sparsities.append(sp)
+            #sparsities.append(sp)
             idgs.append(idg)
             fronts.append(pareto_front.tolist())
 
@@ -74,7 +74,7 @@ def main():
     parser.add_argument("--output_path", help="Path to the output .json file", type=str)
     args = parser.parse_args()
 
-    calculate_metrics(args.name, args.folder_path, args.output_path, True)
+    calculate_metrics(args.name, args.folder_path, args.output_path, False)
 
 if __name__ == "__main__":
     main()

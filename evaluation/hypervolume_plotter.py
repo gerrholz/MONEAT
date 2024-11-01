@@ -12,47 +12,6 @@ from performance_indicators import hypervolume
 
 import seaborn as sns
 
-def extract_number_from_filename(file_path):
-    filename = os.path.basename(file_path)
-    match = re.search(r'front_(\d+)_', filename)
-    return int(match.group(1))
-
-def calculate_hypervolume(pareto_front):
-    # Assume the reference point is at zero for simplicity
-    reference_point = [-100, -100]
-    
-    return hypervolume(np.array([-100,-100]), pareto_front)
-
-def download_pareto_fronts(project, entity, folder_path):
-    api_key = os.getenv("WANDB_API")
-    wandb.login(key=api_key)
-    api = wandb.Api()
-    runs = api.runs(f"{entity}/{project}")
-    os.makedirs(folder_path, exist_ok=True)
-
-    all_hypervolumes = []
-
-    for run in runs:
-        files = [file.name for file in run.files(per_page=200) if "media/table/eval/front_" in file.name]
-        if files:
-            files.sort(key=extract_number_from_filename)
-            hypervolumes = []
-
-            for file_name in files:
-                file_path = os.path.join(folder_path, file_name)
-                run.file(file_name).download(replace=True, root=folder_path)
-
-                with open(file_path, 'r') as f:
-                    pareto_front = json.load(f)
-
-                hypervolume = calculate_hypervolume(np.array(pareto_front["data"]))
-                hypervolumes.append(hypervolume)
-            #hypervolumes = np.sort(hypervolumes)
-
-            all_hypervolumes.append(hypervolumes)
-        print(f"Downloaded Pareto fronts for run {run.id}")
-
-    return all_hypervolumes
 
 def plot_hypervolume_development(hypervolumes, output_folder):
     max_length = max(len(hv) for hv in hypervolumes)
@@ -83,14 +42,25 @@ def plot_hypervolume_development(hypervolumes, output_folder):
     plt.savefig(output_path)
     plt.close()
 
+def load_hypervolumes(input_file1, input_file2):
+    with open(input_file1, "r") as f:
+        data1 = json.load(f)
+    with open(input_file2, "r") as f:
+        data2 = json.load(f)
+    
+    hypervolumes1 = data1
+    hypervolumes2 = data2
+
+    return hypervolumes1, hypervolumes2
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--project", help="Name of the wandb project", type=str, required=True)
-    parser.add_argument("--folder_path", help="Path to the folder where the pareto fronts will be saved", type=str, required=True)
-    parser.add_argument("--entity", help="Name of the entity", type=str, required=True)
-    parser.add_argument("--output_folder", help="Path to the folder where the hypervolume plot will be saved", type=str, required=True)
+    parser.add_argument("--input_file1", help="Path to the first input file", type=str, required=True)
+    parser.add_argument("--input_file2", help="Path to the second input file", type=str, required=True)
+    parser.add_argument("--output_path", help="Path to file where the hypervolumes will be saved", type=str, required=True)
 
     args = parser.parse_args()
 
-    hypervolumes = download_pareto_fronts(args.project, args.entity, args.folder_path)
-    plot_hypervolume_development(hypervolumes, args.output_folder)
+    hypervolume1, hypervolume2 = load_hypervolumes(args.input_file1, args.input_file2)
+    
+    plot_hypervolume_development(hypervolume1, args.output_path)

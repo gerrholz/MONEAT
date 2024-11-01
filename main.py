@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 import os
 import time
 import warnings
+import gymnasium as s_gym
 
 
 def set_seed(seed=42):
@@ -27,6 +28,13 @@ def set_seed(seed=42):
 ENV_ID = "mo-swimmer-v4"
 
 env = gym.make(ENV_ID)
+reward_dim = env.unwrapped.reward_space.shape[0]
+#env = s_gym.wrappers.ClipAction(env)
+#env = s_gym.wrappers.NormalizeObservation(env)
+#env = s_gym.wrappers.TransformObservation(env, lambda obs: np.clip(obs, -10, 10))
+#for o in range(reward_dim):
+#    env = gym.MONormalizeReward(env, idx=o, gamma=0.995)
+#    env = gym.MOClipReward(env, idx=o, min_r=-10, max_r=10)
 
 
 def eval_genomes(genomes, config):
@@ -90,7 +98,7 @@ def main(seed):
     p = NSGA2Population(config)
 
     # Add a stdout reporter to show progress in the terminal.
-    p.add_reporter(MOReporter(ref_point=np.array([0, -50])))
+    p.add_reporter(MOReporter(ref_point=np.array([-100, -100])))
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
 

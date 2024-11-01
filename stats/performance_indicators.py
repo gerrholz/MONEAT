@@ -82,4 +82,5 @@ def inverted_generational_distance(front: List[npt.ArrayLike], known_pareto_fron
     """
     
     # Calculate the distance of each point to the closest point in the known pareto front
-    return IGD(np.array(known_pareto_front))(np.array(front))
+    ind = IGD(np.array(known_pareto_front))
+    return ind(np.array(front))

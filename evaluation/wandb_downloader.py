@@ -27,6 +27,9 @@ def download_pareto_fronts(project, entity, folder_path):
     os.makedirs(folder_path, exist_ok=True)
     # For each run, get the pareto front and save it
     for run in runs:
+        # Filter by run name
+        if "mo-halfcheetah-v4__CAPQL" not in run.name:
+            continue
         files = [file.name for file in run.files(per_page=200) if "media/table/eval/front_" in file.name]
         #print(files)
         if files:

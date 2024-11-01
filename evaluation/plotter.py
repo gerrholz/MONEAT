@@ -46,8 +46,8 @@ def calulate_mean_std_fronts(pareto_fronts):
     stacked_fronts = np.array(interpolated_fronts)
     
     # Calculate mean and std
-    mean_front = np.mean(stacked_fronts, axis=0)
-    std_front = np.std(stacked_fronts, axis=0)
+    mean_front = np.nanmean(stacked_fronts, axis=0)
+    std_front = np.nanstd(stacked_fronts, axis=0)
     
     return mean_front, std_front
 
@@ -63,14 +63,14 @@ def plot_pareto_front(mean_front, std_front, name):
 
 
 
-def plot_errorbar(mean_metric1, std_metric1, mean_metric2, std_metric2, name1, name2, metric_name):
+def plot_errorbar(mean_metric1, std_metric1, mean_metric2, std_metric2, mean_metric3, std_metric3, mean_metric4, std_metric4, name1, name2, name3, name4, metric_name):
     # Define positions for the error bars
     sns.set_theme(style="whitegrid", palette="pastel")
-    positions = np.array([1, 2])
+    positions = np.array([1, 2, 3, 4])
     
     # Choose aesthetically pleasing colors
     # Colors for each algorithm
-    colors = ['#1f77b4', '#ff7f0e']
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']
     plt.rcParams['figure.dpi'] = 360
     
     # Plot error bars with enhanced visuals
@@ -80,16 +80,25 @@ def plot_errorbar(mean_metric1, std_metric1, mean_metric2, std_metric2, name1, n
     plt.errorbar(positions[1], mean_metric2, yerr=std_metric2, 
                  fmt='o', ecolor=colors[1], elinewidth=2, capsize=5, capthick=2, markersize=8, markerfacecolor='white', markeredgewidth=2, color=colors[1], label=name2)
     
+    print(mean_metric3, std_metric3)
+    plt.errorbar(positions[2], mean_metric3, yerr=std_metric3,
+                    fmt='o', ecolor=colors[2], elinewidth=2, capsize=5, capthick=2, markersize=8, markerfacecolor='white', markeredgewidth=2, color=colors[2], label=name3)
+    
+    plt.errorbar(positions[3], mean_metric4, yerr=std_metric4,
+                    fmt='o', ecolor=colors[3], elinewidth=2, capsize=5, capthick=2, markersize=8, markerfacecolor='white', markeredgewidth=2, color=colors[3],
+                    label=name4)
+    
+    
     # Add labels and title
-    plt.xticks(positions, [name1, name2], fontsize=10)
+    plt.xticks(positions, [name1, name2, name3, name4], fontsize=10)
     plt.ylabel(metric_name, fontsize=10)
-    plt.title(f"Mean {metric_name} for {name1} and {name2}", fontsize=12, fontweight='bold')
+    plt.title(f"Mean {metric_name} for {name1}, {name2}, {name3}, and {name4}", fontsize=12, fontweight='bold')
     
     # Add a grid for better readability
     plt.grid(True, linestyle='--', alpha=0.6)
     
     # Add legend
-    plt.legend([name1, name2], loc='best', fontsize=10)
+    plt.legend([name1, name2, name3, name4], loc='best', fontsize=10)
     sns.despine(left=True)
 
     
@@ -102,33 +111,46 @@ def plot_errorbar(mean_metric1, std_metric1, mean_metric2, std_metric2, name1, n
     # Show the plot
     #plt.show()
 
-def plot_metrics(metric_file1, metric_file2, output_folder):
+def plot_metrics(metric_file1, metric_file2, metric_file3, metric_file4, output_folder):
     # Load the metrics
     with open(metric_file1, "r") as f:
         data1 = json.load(f)
     with open(metric_file2, "r") as f:
         data2 = json.load(f)
+    with open(metric_file3, "r") as f:
+        data3 = json.load(f)
+    with open(metric_file4, "r") as f:
+        data4 = json.load(f)
     
     # Get the names of the algorithms
     name1 = data1["name"]
     name2 = data2["name"]
+    name3 = data3["name"]
+    name4 = data4["name"]
+
 
     # Plot the pareto fronts with std
     front_1 = data1["pareto_fronts"]
     front_2 = data2["pareto_fronts"]
+    front_3 = data3["pareto_fronts"]
+    front_4 = data4["pareto_fronts"]
 
     mean_front_1, std_front_1 = calulate_mean_std_fronts(front_1)
     mean_front_2, std_front_2 = calulate_mean_std_fronts(front_2)
+    mean_front_3, std_front_3 = calulate_mean_std_fronts(front_3)
+    mean_front_4, std_front_4 = calulate_mean_std_fronts(front_4)
 
     plot_pareto_front(mean_front_1, std_front_1, name1)
     plot_pareto_front(mean_front_2, std_front_2, name2)
+    plot_pareto_front(mean_front_3, std_front_3, name3)
+    plot_pareto_front(mean_front_4, std_front_4, name4)
     sns.set_theme(style="whitegrid", palette="pastel")
     plt.rcParams['figure.dpi'] = 360
 
 
     plt.xlabel("Control cost", fontsize=10)
     plt.ylabel("Reward for moving forward", fontsize=10)
-    plt.title("Average pareto fronts for {} and {}".format(name1, name2), fontsize=12, fontweight='bold')
+    plt.title("Average pareto fronts for {}, {}, {}, and {} ".format(name1, name2,name3,name4), fontsize=12, fontweight='bold')
 
     plt.grid(True, linestyle='--', alpha=0.6)
 
@@ -144,11 +166,15 @@ def plot_metrics(metric_file1, metric_file2, output_folder):
     # Plot the hypervolume
     hypervolumes1 = data1["hypervolume"]
     hypervolumes2 = data2["hypervolume"]
+    hypervolumes3 = data3["hypervolume"]
+    hypervolumes4 = data4["hypervolume"]
 
     mean_hv1, std_hv1 = calulate_mean_std_metric(hypervolumes1)
     mean_hv2, std_hv2 = calulate_mean_std_metric(hypervolumes2)
+    mean_hv3, std_hv3 = calulate_mean_std_metric(hypervolumes3)
+    mean_hv4, std_hv4 = calulate_mean_std_metric(hypervolumes4)
 
-    plot_errorbar(mean_hv1, std_hv1, mean_hv2, std_hv2, name1, name2, "Hypervolume")
+    plot_errorbar(mean_hv1, std_hv1, mean_hv2, std_hv2, mean_hv3, std_hv3, mean_hv4, std_hv4, name1, name2, name3, name4, "Hypervolume")
     plt.savefig(os.path.join(output_folder, "hypervolume.png"))
     plt.close()
 
@@ -204,7 +230,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--metric_file1", help="Path to the first metric file", type=str, required=True)
     parser.add_argument("--metric_file2", help="Path to the second metric file", type=str, required=True)
+    parser.add_argument("--metric_file3", help="Path to the third metric file", type=str, required=True)
+    parser.add_argument("--metric_file4", help="Path to the fourth metric file", type=str, required=True)
     parser.add_argument("--output_folder", help="Path to the folder where the plots will be saved", type=str, required=True)
     args = parser.parse_args()
-    plot_metrics(args.metric_file1, args.metric_file2, args.output_folder)
+    plot_metrics(args.metric_file1, args.metric_file2, args.metric_file3, args.metric_file4, args.output_folder)
 
