@@ -29,12 +29,6 @@ ENV_ID = "mo-swimmer-v4"
 
 env = gym.make(ENV_ID)
 reward_dim = env.unwrapped.reward_space.shape[0]
-#env = s_gym.wrappers.ClipAction(env)
-#env = s_gym.wrappers.NormalizeObservation(env)
-#env = s_gym.wrappers.TransformObservation(env, lambda obs: np.clip(obs, -10, 10))
-#for o in range(reward_dim):
-#    env = gym.MONormalizeReward(env, idx=o, gamma=0.995)
-#    env = gym.MOClipReward(env, idx=o, min_r=-10, max_r=10)
 
 
 def eval_genomes(genomes, config):
@@ -111,18 +105,6 @@ def main(seed):
     plt.scatter(y, x)
     plt.xlabel("Time reward")
     plt.ylabel("Treasure reward")
-    
-    #fig = plt.figure()
-    #ax = fig.add_subplot(111, projection='3d')
-    #x = [g.fitness.values[0] for g in non_dominant]
-    #y = [g.fitness.values[1] for g in non_dominant]
-    #z = [g.fitness.values[2] for g in non_dominant]
-
-    #img = ax.scatter(x, y, z)
-    #fig.colorbar(img)
-    #ax.set_xlabel("Landing reward")
-    #ax.set_ylabel("Shaping reward")
-    #ax.set_zlabel("Main enginge fuel cost")
     plt.title("MONEAT Pareto Front")
 
 

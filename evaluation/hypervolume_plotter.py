@@ -22,15 +22,19 @@ def plot_hypervolume_development(hypervolumes, output_folder):
     std_hv = np.nanstd(hypervolumes_array, axis=0)
 
     #plt.figure(figsize=(10, 6))
-
-    iterations = np.arange(1, max_length + 1)
+    iterations = np.arange(0, max_length, 1)
+    #step_size = 2000000 / max_length
+    #iterations = np.arange(0, 2000000, step_size)
+    #iterations = np.arange(0, (max_length)*200000, 10000)
     sns.set_theme(style="whitegrid", palette="pastel")
     plt.rcParams['figure.dpi'] = 360
 
-    plt.plot(iterations, mean_hv, label='Mean Hypervolume', color='blue', linewidth=2, linestyle='--', marker='o', markersize=5, markerfacecolor='white')
-    plt.fill_between(iterations, mean_hv - std_hv, mean_hv + std_hv, color='blue', alpha=0.2, label='Std Deviation')
+    plt.plot(iterations, mean_hv, label='Mean Hypervolume', color='orange', linewidth=2, linestyle='--', marker='o', markersize=5, markerfacecolor='white')
+    plt.fill_between(iterations, mean_hv - std_hv, mean_hv + std_hv, color='orange', alpha=0.2, label='Std Deviation')
 
-    plt.xlabel('Evaluation Iteration', fontsize=10)
+    plt.ylim(0,25000)
+
+    plt.xlabel('Iteration', fontsize=10)
     plt.ylabel('Hypervolume', fontsize=10)
     plt.title('Hypervolume Development over iterations', fontsize=12, fontweight='bold')
     plt.legend(loc='best', fontsize='small')
